@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ženy v lihu – kvíz A1</title>
+<meta name="description" content="Kvíz k traileru filmu Ženy v lihu – čeština A1 pro německy mluvící studenty.">
+<style>
+  :root {
+    --bg: #f6f1ee;
+    --card: #ffffff;
+    --text: #2a2024;
+    --muted: #6d5f64;
+    --line: #e6dcd8;
+    --wine: #7a1f3d;
+    --wine-dark: #5e1630;
+    --wine-soft: #f7e9ee;
+    --ok: #1f7a4d;
+    --ok-soft: #e7f5ee;
+    --bad: #b3263e;
+    --bad-soft: #fbeaec;
+    --hint: #fff7e6;
+    --hint-line: #f0d9a8;
+    --hint-text: #6b4e12;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header { background: var(--wine); color: #fff; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+  header .wrap { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; padding-bottom: 14px; gap: 12px; }
+  header h1 { font-size: 1.15rem; margin: 0; }
+  .badge { background: var(--wine-dark); font-size: .75rem; font-weight: 700; letter-spacing: .05em; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  main { flex: 1; padding: 28px 0; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,.04); animation: fade .25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .hidden { display: none !important; }
+  h2 { margin: 0 0 8px; font-size: 1.5rem; }
+  .de { color: var(--muted); font-size: .92rem; }
+  p { margin: 0 0 12px; }
+  .center { text-align: center; }
+
+  .steps { text-align: left; background: var(--wine-soft); border-radius: 12px; padding: 14px 16px; margin: 18px 0; }
+  .steps ol { margin: 0; padding-left: 20px; }
+  .steps li { margin-bottom: 8px; }
+  .steps li:last-child { margin-bottom: 0; }
+
+  .btn { display: inline-block; border: 0; cursor: pointer; font: inherit; font-weight: 650; border-radius: 12px; padding: 12px 22px; text-decoration: none; transition: background .15s; }
+  .btn-primary { background: var(--wine); color: #fff; }
+  .btn-primary:hover { background: var(--wine-dark); }
+  .btn-outline { background: #fff; color: var(--wine); border: 2px solid var(--wine); }
+  .btn-outline:hover { background: var(--wine-soft); }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px; }
+
+  .progress-head { display: flex; justify-content: space-between; font-size: .88rem; font-weight: 650; color: var(--muted); margin-bottom: 6px; }
+  .bar { height: 8px; background: var(--line); border-radius: 999px; overflow: hidden; margin-bottom: 22px; }
+  .bar span { display: block; height: 100%; background: var(--wine); width: 0; transition: width .3s; }
+
+  .q { font-size: 1.3rem; font-weight: 700; margin: 0 0 6px; }
+  .toggle { background: none; border: 0; color: var(--wine); font: inherit; font-size: .88rem; font-weight: 650; padding: 4px 0; cursor: pointer; }
+  .toggle:hover { text-decoration: underline; }
+  .trans { background: var(--hint); border: 1px solid var(--hint-line); color: var(--hint-text); border-radius: 10px; padding: 10px 12px; margin-top: 8px; font-size: .92rem; }
+  .trans p { margin: 0; }
+  .trans .hint { margin-top: 4px; font-size: .85rem; }
+
+  .options { display: grid; gap: 10px; margin: 18px 0; }
+  .opt { text-align: left; background: #fff; border: 1.5px solid var(--line); border-radius: 12px; padding: 14px 16px; font: inherit; font-weight: 600; color: var(--text); cursor: pointer; transition: border-color .15s, background .15s; }
+  .opt:hover:not(:disabled) { border-color: var(--wine); background: var(--wine-soft); }
+  .opt:disabled { cursor: default; }
+  .opt .sub { display: block; font-weight: 400; font-size: .85rem; color: var(--muted); margin-top: 2px; }
+  .opt.correct { border: 2px solid var(--ok); background: var(--ok-soft); }
+  .opt.wrong { border: 2px solid var(--bad); background: var(--bad-soft); }
+
+  .feedback { border-radius: 12px; padding: 14px 16px; font-size: .95rem; margin-bottom: 18px; }
+  .feedback.ok { background: var(--ok-soft); border: 1px solid #b9e2cc; }
+  .feedback.bad { background: var(--bad-soft); border: 1px solid #f0c3ca; }
+  .feedback strong { display: block; margin-bottom: 4px; }
+  .feedback .de { display: block; margin-top: 4px; }
+
+  .next-row { display: flex; justify-content: flex-end; }
+  .emoji { font-size: 3rem; margin-bottom: 8px; }
+  .result-box { background: var(--bg); border-radius: 12px; padding: 14px 16px; margin: 16px 0 20px; }
+
+  footer { border-top: 1px solid var(--line); background: #fff; color: var(--muted); font-size: .8rem; text-align: center; padding: 14px 16px; }
+  footer a { color: var(--wine); }
+
+  @media (max-width: 480px) {
+    .card { padding: 18px; }
+    h2 { font-size: 1.3rem; }
+    .q { font-size: 1.15rem; }
+    .btn { width: 100%; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>🍷 Ženy v lihu – kvíz</h1>
+    <span class="badge">ČEŠTINA A1</span>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <!-- Úvod -->
+    <section id="intro" class="card center">
+      <h2>Kvíz k traileru</h2>
+      <p class="de">Quiz zum Filmtrailer</p>
+
+      <div class="steps">
+        <ol>
+          <li>Podívejte se na trailer.<br><span class="de">Sehen Sie sich den Trailer an.</span></li>
+          <li>Odpovězte na 8 otázek.<br><span class="de">Beantworten Sie 8 Fragen.</span></li>
+          <li>Nerozumíte? Klikněte na „Překlad“.<br><span class="de">Sie verstehen etwas nicht? Klicken Sie auf „Übersetzung“.</span></li>
+        </ol>
+      </div>
+
+      <div class="btn-row">
+        <a class="btn btn-outline" href="https://www.youtube.com/watch?v=Py0QKeesPlM" target="_blank" rel="noopener">▶ Trailer na YouTube</a>
+        <button class="btn btn-primary" onclick="startQuiz()">Začít kvíz / Quiz starten</button>
+      </div>
+    </section>
+
+    <!-- Kvíz -->
+    <section id="quiz" class="card hidden">
+      <div class="progress-head">
+        <span id="qnum">Otázka 1 / 8</span>
+        <span id="score">Body: 0</span>
+      </div>
+      <div class="bar"><span id="bar"></span></div>
+
+      <p id="qtext" class="q"></p>
+      <button id="toggle" class="toggle" onclick="toggleTrans()">🌐 Překlad / Übersetzung</button>
+      <div id="trans" class="trans hidden">
+        <p id="qde"></p>
+        <p id="hint" class="hint"></p>
+      </div>
+
+      <div id="options" class="options"></div>
+      <div id="feedback" class="feedback hidden"></div>
+
+      <div class="next-row">
+        <button id="next" class="btn btn-primary hidden" onclick="nextQuestion()">Další otázka →</button>
+      </div>
+    </section>
+
+    <!-- Výsledek -->
+    <section id="result" class="card center hidden">
+      <div id="emoji" class="emoji">🎉</div>
+      <h2>Hotovo!</h2>
+      <p class="de">Geschafft!</p>
+      <p id="resultScore" style="font-size:1.15rem;font-weight:650;margin-top:10px;"></p>
+      <div id="resultMsg" class="result-box"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="startQuiz()">Ještě jednou / Noch einmal</button>
+        <a class="btn btn-outline" href="https://www.youtube.com/watch?v=Py0QKeesPlM" target="_blank" rel="noopener">▶ Trailer znovu</a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  Česky s láskou · Čeština pro německy mluvící · Na motivy traileru k filmu <em>Ženy v lihu</em> (2026)
+</footer>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "Kolik kamarádek jede na výlet?",
+    de: "Wie viele Freundinnen fahren weg?",
+    hint: "Tipp: Zählen Sie die Frauen im Trailer.",
+    options: [
+      { t: "Tři.", d: "Drei.", ok: true },
+      { t: "Dvě.", d: "Zwei." },
+      { t: "Čtyři.", d: "Vier." },
+      { t: "Pět.", d: "Fünf." }
+    ],
+    ex: "Ve filmu jsou tři kamarádky.",
+    exDe: "Im Film gibt es drei Freundinnen."
+  },
+  {
+    q: "Jak se jmenují?",
+    de: "Wie heißen sie?",
+    hint: "Tipp: Alle drei Namen müssen stimmen.",
+    options: [
+      { t: "Marie, Gábina a Alena.", d: "Marie, Gábina und Alena.", ok: true },
+      { t: "Marie, Petra a Eva.", d: "Marie, Petra und Eva." },
+      { t: "Jana, Gábina a Lucie.", d: "Jana, Gábina und Lucie." },
+      { t: "Alena, Hana a Věra.", d: "Alena, Hana und Věra." }
+    ],
+    ex: "Kamarádky se jmenují Marie, Gábina a Alena.",
+    exDe: "Die Freundinnen heißen Marie, Gábina und Alena."
+  },
+  {
+    q: "Kam jedou?",
+    de: "Wohin fahren sie?",
+    hint: "Tipp: Es ist eine Weinregion in Tschechien.",
+    options: [
+      { t: "Na Moravu.", d: "Nach Mähren.", ok: true },
+      { t: "Do Prahy.", d: "Nach Prag." },
+      { t: "K moři.", d: "Ans Meer." },
+      { t: "Na hory.", d: "In die Berge." }
+    ],
+    ex: "Jedou do resortu na Moravě. Pozor: jedu NA Moravu, jsem NA Moravě.",
+    exDe: "Sie fahren in ein Resort in Mähren. Achtung: „na Moravu“ (wohin), „na Moravě“ (wo)."
+  },
+  {
+    q: "Jak dlouho tam jsou?",
+    de: "Wie lange bleiben sie dort?",
+    hint: "Tipp: Es ist ein kurzer Urlaub.",
+    options: [
+      { t: "Pár dní.", d: "Ein paar Tage.", ok: true },
+      { t: "Jeden den.", d: "Einen Tag." },
+      { t: "Celý měsíc.", d: "Einen ganzen Monat." },
+      { t: "Jeden rok.", d: "Ein Jahr." }
+    ],
+    ex: "Jedou si odpočinout na pár dní.",
+    exDe: "Sie fahren für ein paar Tage weg, um sich zu erholen."
+  },
+  {
+    q: "Co tam pijí?",
+    de: "Was trinken sie dort?",
+    hint: "Tipp: Mähren ist für dieses Getränk bekannt.",
+    options: [
+      { t: "Víno.", d: "Wein.", ok: true },
+      { t: "Pivo.", d: "Bier." },
+      { t: "Čaj.", d: "Tee." },
+      { t: "Mléko.", d: "Milch." }
+    ],
+    ex: "Na Moravě se pije hlavně víno.",
+    exDe: "In Mähren trinkt man vor allem Wein."
+  },
+  {
+    q: "Kde pijí víno?",
+    de: "Wo trinken sie den Wein?",
+    hint: "Tipp: Ein kleiner Raum unter der Erde.",
+    options: [
+      { t: "Ve sklípku.", d: "Im Weinkeller.", ok: true },
+      { t: "V kavárně.", d: "Im Café." },
+      { t: "V kanceláři.", d: "Im Büro." },
+      { t: "Ve škole.", d: "In der Schule." }
+    ],
+    ex: "Sklípek je malý vinný sklep. Na Moravě je jich hodně.",
+    exDe: "„Sklípek“ ist ein kleiner Weinkeller. In Mähren gibt es sehr viele davon."
+  },
+  {
+    q: "Co znamená „být v lihu“?",
+    de: "Was bedeutet „být v lihu“?",
+    hint: "Tipp: „Líh“ bedeutet Alkohol.",
+    options: [
+      { t: "Být opilý.", d: "Betrunken sein.", ok: true },
+      { t: "Být unavený.", d: "Müde sein." },
+      { t: "Být nemocný.", d: "Krank sein." },
+      { t: "Mít hlad.", d: "Hunger haben." }
+    ],
+    ex: "Líh je alkohol. „Být v lihu“ je hovorově „být opilý“.",
+    exDe: "„Líh“ ist Alkohol. „Být v lihu“ heißt umgangssprachlich „betrunken sein“."
+  },
+  {
+    q: "Od kdy je film v kině?",
+    de: "Ab wann läuft der Film im Kino?",
+    hint: "Tipp: Das Datum steht am Ende des Trailers bzw. in der Beschreibung.",
+    options: [
+      { t: "Od 12. listopadu.", d: "Ab dem 12. November.", ok: true },
+      { t: "Od 12. října.", d: "Ab dem 12. Oktober." },
+      { t: "Od 2. listopadu.", d: "Ab dem 2. November." },
+      { t: "Od 21. prosince.", d: "Ab dem 21. Dezember." }
+    ],
+    ex: "Film je v kině od dvanáctého listopadu 2026. Listopad = November.",
+    exDe: "Der Film läuft ab dem 12. November 2026 im Kino. „Listopad“ = November."
+  }
+];
+
+const OK_LABELS = ["Správně!", "Výborně!", "Přesně tak!", "Ano, správně!"];
+const BAD_LABELS = ["To není ono.", "Skoro!", "Bohužel ne."];
+
+let order = [], idx = 0, score = 0, answered = false, showDe = false;
+
+function shuffle(a) {
+  const arr = a.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function $(id) { return document.getElementById(id); }
+
+function show(id) {
+  ["intro", "quiz", "result"].forEach(s => $(s).classList.add("hidden"));
+  $(id).classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function startQuiz() {
+  order = QUESTIONS.map(q => ({ ...q, options: shuffle(q.options) }));
+  idx = 0; score = 0; showDe = false;
+  $("score").textContent = "Body: 0";
+  show("quiz");
+  render();
+}
+
+function optionHTML(o) {
+  return `<span>${o.t}</span>` + (showDe ? `<span class="sub">🇩🇪 ${o.d}</span>` : "");
+}
+
+function render() {
+  answered = false;
+  const q = order[idx];
+  $("qnum").textContent = `Otázka ${idx + 1} / ${order.length}`;
+  $("bar").style.width = `${(idx / order.length) * 100}%`;
+  $("qtext").textContent = q.q;
+  $("qde").textContent = "🇩🇪 " + q.de;
+  $("hint").textContent = q.hint;
+  $("trans").classList.toggle("hidden", !showDe);
+
+  const box = $("options");
+  box.innerHTML = "";
+  q.options.forEach((o, i) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.innerHTML = optionHTML(o);
+    b.onclick = () => choose(i);
+    box.appendChild(b);
+  });
+
+  $("feedback").className = "feedback hidden";
+  $("next").classList.add("hidden");
+}
+
+function toggleTrans() {
+  showDe = !showDe;
+  $("trans").classList.toggle("hidden", !showDe);
+  const q = order[idx];
+  [...$("options").children].forEach((b, i) => { b.innerHTML = optionHTML(q.options[i]); });
+}
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function choose(i) {
+  if (answered) return;
+  answered = true;
+  const q = order[idx];
+  const buttons = [...$("options").children];
+  const right = q.options[i].ok === true;
+
+  buttons.forEach((b, k) => {
+    b.disabled = true;
+    if (q.options[k].ok) b.classList.add("correct");
+  });
+  if (!right) buttons[i].classList.add("wrong");
+
+  const fb = $("feedback");
+  if (right) {
+    score++;
+    $("score").textContent = `Body: ${score}`;
+    fb.className = "feedback ok";
+    fb.innerHTML = `<strong>✓ ${pick(OK_LABELS)}</strong>${q.ex}<span class="de">🇩🇪 ${q.exDe}</span>`;
+  } else {
+    const correct = q.options.find(o => o.ok);
+    fb.className = "feedback bad";
+    fb.innerHTML = `<strong>✗ ${pick(BAD_LABELS)} Správná odpověď: ${correct.t}</strong>${q.ex}<span class="de">🇩🇪 ${q.exDe}</span>`;
+  }
+
+  $("bar").style.width = `${((idx + 1) / order.length) * 100}%`;
+  $("next").textContent = idx < order.length - 1 ? "Další otázka →" : "Výsledek →";
+  $("next").classList.remove("hidden");
+}
+
+function nextQuestion() {
+  if (idx < order.length - 1) { idx++; render(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+  else results();
+}
+
+function results() {
+  const total = order.length;
+  $("resultScore").textContent = `Máte ${score} z ${total} bodů.`;
+  let emoji, msg;
+  if (score === total) {
+    emoji = "🥇";
+    msg = "<strong>Výborně!</strong><br>Rozumíte všemu. Na zdraví! 🍷<br><span class='de'>Ausgezeichnet! Sie haben alles verstanden. Auf Ihre Gesundheit!</span>";
+  } else if (score >= Math.ceil(total / 2)) {
+    emoji = "🎉";
+    msg = "<strong>Dobrá práce!</strong><br>Rozumíte skoro všemu. Podívejte se na trailer ještě jednou.<br><span class='de'>Gute Arbeit! Sie verstehen fast alles. Sehen Sie sich den Trailer noch einmal an.</span>";
+  } else {
+    emoji = "💪";
+    msg = "<strong>Nevadí!</strong><br>Pusťte si trailer znovu a zkuste to ještě jednou.<br><span class='de'>Kein Problem! Sehen Sie sich den Trailer noch einmal an und versuchen Sie es erneut.</span>";
+  }
+  $("emoji").textContent = emoji;
+  $("resultMsg").innerHTML = msg;
+  show("result");
+}
+</script>
+</body>
+</html>
